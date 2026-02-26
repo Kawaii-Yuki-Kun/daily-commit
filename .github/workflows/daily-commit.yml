@@ -1,0 +1,35 @@
+name: Daily Streak Commit
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # 9 AM UTC = 11 AM Lebanon (UTC+2)
+  workflow_dispatch: # allows manual trigger from GitHub UI
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Configure git
+        run: |
+          git config user.name "Kawaii-Yuki-Kun"
+          git config user.email "kawaiiyukikun@hotmail.com"
+
+      - name: Make streak commit
+        run: |
+          echo "Streak updated on $(date)" > streak_log.txt
+          git add streak_log.txt
+          git commit -m "Auto commit to keep the streak alive - $(date)"
+          git push origin main
