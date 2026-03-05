@@ -2,7 +2,7 @@ name: Daily Streak Commit
 
 on:
   schedule:
-    - cron: '0 19 * * *'  # 7 PM UTC = 9 PM Lebanon (UTC+2)
+    - cron: '40 9 * * *'  # 9:40 AM UTC = 11:40 AM Lebanon (UTC+2)
   workflow_dispatch: # allows manual trigger from GitHub UI
 
 jobs:
